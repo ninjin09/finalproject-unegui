@@ -36,6 +36,7 @@ else:
     
 st.dataframe(filtered_df3, width=3000)
 
+st.write(f'## Bar Chart of Avg Price per Manufacturer')
 avg_price_by_manufacturer = df.groupby('manufacturer')['price'].mean()
 st.bar_chart(avg_price_by_manufacturer)
 
