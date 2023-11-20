@@ -35,3 +35,11 @@ else:
     filtered_df3 = filtered_df2
     
 st.dataframe(filtered_df3, width=3000)
+
+avg_price_by_manufacturer = df.groupby('manufacturer')['price'].mean()
+st.bar_chart(avg_price_by_manufacturer)
+
+st.write(f'### Line Chart for Prices by Manufacturer')
+for manufacturer, data in df.groupby('manufacturer'):
+    st.write(manufacturer)
+    st.line_chart(data['price'].reset_index(drop=True))
