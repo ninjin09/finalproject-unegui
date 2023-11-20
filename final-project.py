@@ -35,4 +35,3 @@ else:
     filtered_df3 = filtered_df2
     
 st.dataframe(filtered_df3, width=3000)
-        
