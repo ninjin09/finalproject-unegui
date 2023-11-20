@@ -3,28 +3,36 @@ import pandas as pd
 
 st.title("Unegui.mn Laptop Listings Dashboard")
 
-df = pd.read_csv('finaldf.csv', index_col=0)
+df = pd.read_csv('finaldf.csv')
 
 st.sidebar.title('Filter Options')
 
 price_range = st.sidebar.slider('Select Price Range', min_value=df['price'].min(), max_value=df['price'].max(), 
                                 value=(df['price'].min(), df['price'].max()))
-filtered_df = df[(df['price'] >= price_range[0]) & (df['price'] <= price_range[1])]
+
+selection = st.sidebar.selectbox('select',("All", "HP", "Lenovo", "Acer", "Asus", "Dell", 
+                                                           "Apple", "Gateway", "other", "MSI", "Samsung",
+                                                           "Evoo", "Sony", "Microsoft Surface"))
+
+if selection == "All":
+    filtered_df = df
+else:
+    filtered_df = df[df['manufacturer'] == selection]
+
+filtered_df1 = filtered_df[(filtered_df['price'] >= price_range[0]) & (filtered_df['price'] <= price_range[1])]
 
 show_description = st.sidebar.checkbox('Show Description', value=False)
 
-# selection = st.sidebar.selectbox('Select a manufacturer', ('All', 'HP', 'Lenovo', 'Acer', 'Asus', 'Dell', 
-#                                                            'Apple', 'Gateway', 'other', 'MSI', 'Samsung',
-#                                                            'Evoo', 'Sony', 'Microsoft Surface'))
-
-# if selection == "All":
-#     filtered_df1 = filtered_df
-# else:
-#     filtered_df1 = filtered_df[filtered_df['manufacturer'] == selection]
-    
-    
 if not show_description:
-    st.dataframe(filtered_df.drop('description', axis=1))
+    filtered_df2 = filtered_df1.drop('description', axis=1)
 else:
-    st.dataframe(filtered_df)
-
+    filtered_df2 = filtered_df1
+    
+show_nans = st.sidebar.checkbox('Hide Nan Values', value=False)
+if show_nans:
+    filtered_df3 = filtered_df2.dropna()
+else:
+    filtered_df3 = filtered_df2
+    
+st.dataframe(filtered_df3, width=3000)
+        
