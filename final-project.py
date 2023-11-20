@@ -6,8 +6,6 @@ st.title("Unegui.mn Laptop Listings Dashboard")
 
 df = pd.read_csv('finaldf.csv', index_col=0)
 
-st.dataframe(df)
-
 st.sidebar.title('Filter Options')
 
 price_range = st.sidebar.slider('Select Price Range', min_value=df['price'].min(), max_value=df['price'].max(), 
