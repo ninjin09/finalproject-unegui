@@ -1,1 +1,4 @@
 pandas
+re
+requests
+bs4
