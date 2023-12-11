@@ -3,12 +3,10 @@ import pandas as pd
 import re
 import requests
 from bs4 import BeautifulSoup
-import pickle
+import joblib
 import sklearn
 
-
-with open('random_forest.pkl', 'rb') as file:
-    model = pickle.load(file)
+model = joblib.load('model.joblib')
 
 st.title("Unegui.mn Laptop Listings Dashboard")
 
