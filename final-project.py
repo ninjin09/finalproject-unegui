@@ -3,6 +3,10 @@ import pandas as pd
 import re
 import requests
 from bs4 import BeautifulSoup
+import pickle
+
+with open('random_forest.pkl', 'rb') as file:
+    model = pickle.load(file)
 
 st.title("Unegui.mn Laptop Listings Dashboard")
 
@@ -102,7 +106,7 @@ if st.button('Refresh the Data!'):
     df['price'] = df['price'].astype(float)
     
     for i in range(len(df)):
-        if df['price'][i] < 10.00:
+        if df['price'][i] <= 10.00: ###changed!!!!
             df['price'][i] = df['price'][i] * 1_000_000
             
     df['price'] = df['price'].astype(int)
@@ -110,7 +114,8 @@ if st.button('Refresh the Data!'):
     for i in range(len(df)):
         df['manufacturer'][i] = df['manufacturer'][i].replace('Бусад','other')
 else:
-    df = pd.read_csv('finaldf.csv')
+    df = pd.read_csv('df.csv')
+    
 
 ################################################################################################################
 
@@ -152,11 +157,62 @@ else:
 st.dataframe(filtered_df4, width=3000)
 
 
-st.write(f'### Bar Chart of Avg Price per Manufacturer')
-avg_price_by_manufacturer = df.groupby('manufacturer')['price'].mean()
-st.bar_chart(avg_price_by_manufacturer)
+################################################################################################################
+#Machine Learning
+with st.expander(f'Wanna Sell Your Laptop?', expanded=False):
+# st.header('Wanna Sell Your Laptop?')
+    col1,col2,col3 = st.columns(3)
+    with col1:
+        manufacturer_selection = st.selectbox('Manufacturer',('Toshiba', 'Evoo', 'Gateway', 'Dell', 'LG', 'HP', 'Samsung',
+           'Sony', 'Acer', 'Asus', 'Lenovo', 'Apple', 'MSI', 'Microsoft Surface','other'))
 
-st.write(f'### Line Chart for Prices by Manufacturer')
-for manufacturer, data in df.groupby('manufacturer'):
-    st.write(manufacturer)
-    st.line_chart(data['price'].reset_index(drop=True))
+        condition_selection = st.selectbox('Condition', ('New', 'Used'))
+    
+    with col2:
+        cpu_selection = st.selectbox('CPU',('celeron','i3','ryzen3','m3','i5','m2','ryzen5','i7',
+                                          'ryzen7','m1','ryzen9','i9'))
+
+        ram_selection = st.selectbox('RAM',(4,8,16,32,64))
+    
+    with col3:
+        storage_selection = st.selectbox('disk storage (gb)',(128,256,512,1024,2048))
+
+        screen_selection = st.selectbox('screen size (inch)',('<13','13 - 14','14 - 15,6','16 - 17','>18'))
+        
+    manufacturer_selection_num  = {'Toshiba':0,'Evoo':1,'Gateway':2,'Dell':3,
+                                   'LG':4,'HP':5,'other':6,'Samsung':7,'Sony':8,'Acer':9,
+                                   'Asus':10,'Lenovo':11,'Apple':12,'MSI':13,'Microsoft Surface':14,}
+    cpu_selection_num = {'celeron':0, 'i3':1, 'ryzen3':2, 'm3':3, 'i5':4, 'm2':5, 'ryzen5':6, 'i7':7, 'ryzen7':8,
+                         'm1':9, 'ryzen9':10, 'i9':11}
+    screen_selection_num = {'<13':0,'13 - 14':1,'14 - 15,6':2,'16 - 17':3,'>18':4}
+    condition_selection_num = {'Used':0, "New":1}
+    
+    if manufacturer_selection:
+        manufacturer_number = manufacturer_selection_num.get(manufacturer_selection)
+    if condition_selection:
+        condition_number = condition_selection_num.get(condition_selection)
+    if cpu_selection:
+        cpu_number = cpu_selection_num.get(cpu_selection)
+    if screen_selection:
+        screen_number = screen_selection_num.get(screen_selection)
+        
+    inputs = [manufacturer_number,condition_number,screen_number,cpu_number,ram_selection,storage_selection]
+    
+    if st.button('Predict Market Price!'):
+        prediction = int(model.predict([inputs]))
+        col01,col02,col03 = st.columns(3)
+        with col02:
+            st.markdown(f"<h1 style='text-align: center; color: wheat;'>Your Laptop is Worth Around:</h1>", unsafe_allow_html=True)
+            st.markdown(f"<h1 style='text-align: center; color: salmon;'>{prediction}</h1>", unsafe_allow_html=True)
+
+################################################################################################################
+with st.expander("Show Stats!", expanded=False):
+    st.write(f'### Bar Chart of Avg Price per Manufacturer')
+    avg_price_by_manufacturer = df.groupby('manufacturer')['price'].mean()
+    st.bar_chart(avg_price_by_manufacturer)
+
+    st.write(f'### Line Chart for Prices by Manufacturer')
+    for manufacturer, data in df.groupby('manufacturer'):
+        st.write(manufacturer)
+        st.line_chart(data['price'].reset_index(drop=True))
+
