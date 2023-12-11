@@ -112,7 +112,7 @@ if st.button('Refresh the Data!'):
     for i in range(len(df)):
         df['manufacturer'][i] = df['manufacturer'][i].replace('Бусад','other')
 else:
-    df = pd.read_csv('df.csv')
+    df = pd.read_csv('finaldf.csv')
     
 
 ################################################################################################################
