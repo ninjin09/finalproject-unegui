@@ -7,11 +7,6 @@ import pickle
 import sklearn
 
 
-import subprocess
-installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
-print(installed_packages)
-
-
 with open('random_forest.pkl', 'rb') as file:
     model = pickle.load(file)
 
