@@ -6,8 +6,6 @@ from bs4 import BeautifulSoup
 import joblib
 import sklearn
 
-model = joblib.load('model.joblib')
-
 st.title("Unegui.mn Laptop Listings Dashboard")
 
 if st.button('Refresh the Data!'):
@@ -114,7 +112,7 @@ if st.button('Refresh the Data!'):
     for i in range(len(df)):
         df['manufacturer'][i] = df['manufacturer'][i].replace('Бусад','other')
 else:
-    df = pd.read_csv('df.csv')
+    df = pd.read_csv('finaldf.csv')
     
 
 ################################################################################################################
@@ -161,6 +159,7 @@ st.dataframe(filtered_df4, width=3000)
 #Machine Learning
 with st.expander(f'Wanna Sell Your Laptop?', expanded=False):
 # st.header('Wanna Sell Your Laptop?')
+    model = joblib.load('model.joblib')
     col1,col2,col3 = st.columns(3)
     with col1:
         manufacturer_selection = st.selectbox('Manufacturer',('Toshiba', 'Evoo', 'Gateway', 'Dell', 'LG', 'HP', 'Samsung',
