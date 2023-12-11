@@ -4,6 +4,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import pickle
+import sklearn
 
 with open('random_forest.pkl', 'rb') as file:
     model = pickle.load(file)
