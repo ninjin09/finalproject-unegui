@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 import pickle
 import sklearn
 
-
-with open('random_forest.pkl', 'rb') as file:
+filename = "random_forest.pkl"
+with open(filename, 'rb') as file:
     model = pickle.load(file)
 
 st.title("Unegui.mn Laptop Listings Dashboard")
