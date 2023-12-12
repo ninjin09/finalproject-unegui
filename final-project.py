@@ -159,7 +159,6 @@ st.dataframe(filtered_df4, width=3000)
 #Machine Learning
 with st.expander(f'Wanna Sell Your Laptop?', expanded=False):
 # st.header('Wanna Sell Your Laptop?')
-    model = joblib.load('model.joblib')
     col1,col2,col3 = st.columns(3)
     with col1:
         manufacturer_selection = st.selectbox('Manufacturer',('Toshiba', 'Evoo', 'Gateway', 'Dell', 'LG', 'HP', 'Samsung',
@@ -198,7 +197,8 @@ with st.expander(f'Wanna Sell Your Laptop?', expanded=False):
     inputs = [manufacturer_number,condition_number,screen_number,cpu_number,ram_selection,storage_selection]
     
     if st.button('Predict Market Price!'):
-        prediction = int(model.predict([inputs]))
+        forest = joblib.load('model.joblib')
+        prediction = int(forest.predict([inputs]))
         col01,col02,col03 = st.columns(3)
         with col02:
             st.markdown(f"<h1 style='text-align: center; color: wheat;'>Your Laptop is Worth Around:</h1>", unsafe_allow_html=True)
