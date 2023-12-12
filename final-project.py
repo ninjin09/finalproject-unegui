@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import joblib
 import sklearn
+import pickle
 
 st.title("Unegui.mn Laptop Listings Dashboard")
 
@@ -196,7 +197,7 @@ with st.expander(f'Wanna Sell Your Laptop?', expanded=False):
     inputs = [manufacturer_number,condition_number,screen_number,cpu_number,ram_selection,storage_selection]
     
     if st.button('Predict Market Price!'):
-        forest = joblib.load('model.joblib')
+        forest = pickle.load(open('forest.pkl', 'rb'))
         prediction = int(forest.predict([inputs]))
         col01,col02,col03 = st.columns(3)
         with col02:
