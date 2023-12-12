@@ -158,7 +158,6 @@ st.dataframe(filtered_df4, width=3000)
 ################################################################################################################
 #Machine Learning
 with st.expander(f'Wanna Sell Your Laptop?', expanded=False):
-# st.header('Wanna Sell Your Laptop?')
     col1,col2,col3 = st.columns(3)
     with col1:
         manufacturer_selection = st.selectbox('Manufacturer',('Toshiba', 'Evoo', 'Gateway', 'Dell', 'LG', 'HP', 'Samsung',
